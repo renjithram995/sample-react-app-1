@@ -1,14 +1,12 @@
 import Card from "../UI/Card";
 import Button from "../UI/Button";
 import styles from "./UserInput.module.css";
-import { Fragment, useState } from "react";
+import { Fragment, useRef, useState } from "react";
 import ErrorModel from "../UI/Error";
 
 const UserInput = (props) => {
-  const [userInput, setUserInput] = useState({
-    userName: "",
-    age: "",
-  });
+  const userNameRef = useRef()
+  const ageRef = useRef()
   const [errorData, setError] = useState({
     title: '',
     message: ''
@@ -16,53 +14,43 @@ const UserInput = (props) => {
   const [isModelVisible, setModelVisibility] = useState(false)
   const onSubmitHandler = (even) => {
     even.preventDefault();
+    const userName = userNameRef.current.value || '';
+    const age = ageRef.current.value || '';
     if (
-      !userInput.userName.trim().length ||
-      !userInput.age ||
-      userInput.age < 1
+      !userName.trim().length ||
+      !age||
+      age< 1
     ) {
-      updateErrorModel()
+      updateErrorModel(userNameRef.current.value, age)
       toggleErrorModel()
       return;
     }
     props.onAddingUser({
-      ...userInput,
+      userName: userName,
+      age: age,
       id: Math.random().toString(),
     });
-    setUserInput({
-      userName: "",
-      age: "",
-    });
+    userNameRef.current.value = ageRef.current.value = '';
   };
-  const updateErrorModel = () => {
-    if (!userInput.userName.trim().length && (!userInput.age ||
-      userInput.age < 1)) {
+  const updateErrorModel = (userName, age) => {
+    if (!userName.trim().length && (!age ||
+      age < 1)) {
         setError({
           title: 'Invalid username and age',
           message: 'Please enter a valid username and age (non-empty values).'
         })
-      } else if (!userInput.userName.trim().length) {
+      } else if (!userName.trim().length) {
         setError({
           title: 'Invalid username',
           message: 'Please enter a valid username (non-empty values).'
         })
-      } else if (!userInput.age || userInput.age < 1) {
+      } else if (!age || age < 1) {
         setError({
           title: 'Invalid age',
           message: 'Please enter a valid age greater than 1.'
         })
       }
   }
-  const onChangeForm = (eve) => {
-    const data = {};
-    data[eve.target.name] = eve.target.value;
-    setUserInput((prevState) => {
-      return {
-        ...prevState,
-        ...data,
-      };
-    });
-  };
   const toggleErrorModel = () => {
     if (isModelVisible) {
       setError({
@@ -80,20 +68,18 @@ const UserInput = (props) => {
           <label htmlFor="userName">Username</label>
           <input
             id="userName"
-            value={userInput.userName}
             name="userName"
-            onChange={onChangeForm}
             type="text"
+            ref={userNameRef}
           />
           <label htmlFor="age">Age years</label>
           <input
             id="age"
-            value={userInput.age}
             name="age"
-            onChange={onChangeForm}
             min="1"
             step="1"
             type="number"
+            ref={ageRef}
           />
           <Button type="submit">Add user</Button>
         </form>
