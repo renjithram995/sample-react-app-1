@@ -1,9 +1,8 @@
 import Card from "../UI/Card";
 import Button from "../UI/Button";
 import styles from "./UserInput.module.css";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import ErrorModel from "../UI/Error";
-import Wrapper from "../Helpers/Wrapper";
 
 const UserInput = (props) => {
   const [userInput, setUserInput] = useState({
@@ -74,7 +73,7 @@ const UserInput = (props) => {
     setModelVisibility(!isModelVisible)
   }
   return (
-    <Wrapper>
+    <Fragment>
       {isModelVisible && <ErrorModel title={errorData.title} message={errorData.message} onOkayButtonClick={toggleErrorModel} />}
       <Card classname={styles.input}>
         <form onSubmit={onSubmitHandler}>
@@ -99,7 +98,7 @@ const UserInput = (props) => {
           <Button type="submit">Add user</Button>
         </form>
       </Card>
-    </Wrapper>
+    </Fragment>
   );
 };
 export default UserInput;

@@ -1,11 +1,10 @@
 import Card from "./Card";
 import Button from "./Button";
 import classes from "./Error.module.css";
-import Wrapper from "../Helpers/Wrapper";
 
 const ErrorModel = (props) => {
   return (
-    <Wrapper>
+    <>
         <div className={classes.backdrop} onClick={props.onOkayButtonClick} />
         <Card classname={classes.modal}>
             <header className={classes.header}>
@@ -18,7 +17,7 @@ const ErrorModel = (props) => {
             <Button onClick={props.onOkayButtonClick} >Okay</Button>
             </footer>
         </Card>
-    </Wrapper>
+    </>
   );
 };
 export default ErrorModel;
